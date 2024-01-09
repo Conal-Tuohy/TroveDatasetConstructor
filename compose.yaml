@@ -1,0 +1,30 @@
+name: trove-dataset-constructor
+
+services:
+  # the front end proxy listens on port 80 and proxies incoming requests to one or other of the back end containers
+  front-end-proxy:
+    image: httpd
+    volumes:
+      - type: bind
+        source: httpd.conf
+        target: /usr/local/apache2/conf/httpd.conf
+      - type: bind
+        source: htdocs/
+        target: /usr/local/apache2/htdocs/
+    ports:
+      - "80:80"
+    expose:
+      - "80"
+      
+  query-builder:
+#    image: trove-query-builder
+    image: ghcr.io/conal-tuohy/trovequerybuilder:main
+  
+  # the trove proxy listens on port 8080 and proxies requests to Trove's API
+  # and rewrites the responses
+  trove-proxy:
+#    image: trove-proxy
+    image: ghcr.io/conal-tuohy/troveproxy:main
+    expose: 
+      - "8080"
+
